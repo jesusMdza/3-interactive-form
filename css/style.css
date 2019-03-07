@@ -105,7 +105,7 @@ input[type="radio"] {
   display: inline-block;
 }
 
-input, button {
+input, button, form {
   border-radius: 8px;
 }
 
