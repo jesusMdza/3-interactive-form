@@ -5,12 +5,69 @@
 This project is attempting to receive an "Exceeds Expectations" grade.
 
  */
-$(document).ready(function () {});
+$(document).ready(function () {
 
-/*
+  const $nameInput = $('#name').focus();
+
+  const toggleOtherInput = () => {
+    const $jobRoleSelect = $('#title');
+    const $otherInput = $('<input id="other-title" placeholder="Your Job Role">');
+
+    $jobRoleSelect.on('change', function () {
+      const $value = $(this).val();
+
+      if ($value === 'other') {
+        $jobRoleSelect.after($otherInput);
+      } else if ($value !== 'other') {
+        $otherInput.remove();
+      }
+    });
+  };
+
+  const matchShirtOptions = () => {
+    const $designSelect = $('#design');
+    const $colorSelect = $('#color');
+    const jsPunsRegex = /[jJ][sS] [pP]\w{3}/;
+    const jsLoveRegex = /[I] \W JS/;
+    let $designOptionValue;
+    let $colorOptionText;
+    let jsLoveTheme;
+
+    $designSelect.on('change', function () {
+      $designOptionValue = $(this).val();
+
+      // show "js puns" shirt colors
+      if ($designOptionValue === 'js puns') {
+        $colorSelect.children().each(function (index, element) {
+          if (jsPunsRegex.test($(element).text()) === true) {
+            $(element).css('display', 'block');
+          } else {
+            $(element).css('display', 'none');
+          }
+        });
+      }
+
+      // show "I <3 js" shirt colors
+      if ($designOptionValue === 'heart js') {
+        $colorSelect.children().each(function (index, element) {
+          if (jsLoveRegex.test($(element).text()) === true) {
+            $(element).css('display', 'block');
+          } else {
+            $(element).css('display', 'none');
+          }
+        });
+      }
+    });
+
+  };
+
+  toggleOtherInput();
+  matchShirtOptions();
+});
+
+/*d
 1. Set focus on the first text field
 a. When the page first loads, the first text field should be in focus by default.
-
 
 2. ”Job Role” section
   a. Include a text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
