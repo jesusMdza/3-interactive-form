@@ -30,39 +30,76 @@ $(document).ready(function () {
     const jsPunsRegex = /[jJ][sS] [pP]\w{3}/;
     const jsLoveRegex = /[I] \W JS/;
     let $designOptionValue;
-    let $colorOptionText;
-    let jsLoveTheme;
 
     $designSelect.on('change', function () {
       $designOptionValue = $(this).val();
 
-      // show "js puns" shirt colors
+      // show only "js puns" shirt colors
       if ($designOptionValue === 'js puns') {
         $colorSelect.children().each(function (index, element) {
           if (jsPunsRegex.test($(element).text()) === true) {
-            $(element).css('display', 'block');
+            $(element).show();
           } else {
-            $(element).css('display', 'none');
+            $(element).hide();
           }
         });
+
+        $('#color').find('option:not(:hidden):eq(0)');
       }
 
-      // show "I <3 js" shirt colors
+      // show only "I <3 js" shirt colors
       if ($designOptionValue === 'heart js') {
         $colorSelect.children().each(function (index, element) {
           if (jsLoveRegex.test($(element).text()) === true) {
-            $(element).css('display', 'block');
+            $(element).show();
           } else {
-            $(element).css('display', 'none');
+            $(element).hide();
           }
         });
+
+        $('#color').find('option:not(:hidden):eq(0)');
       }
     });
+  };
 
+  const compareActivities = () => {
+    const $checkBoxes = $('input[type="checkbox"]');
+    const dayTimeRegex = /\w* \d\w+\W\d*\w+/;
+
+    $checkBoxes.on('change', () => {
+      const $boxesChecked = $('input[type="checkbox"]:checked');
+      const $boxesUnchecked = $('input[type="checkbox"]').not(':checked');
+      let array = [];
+
+      if ($boxesChecked) {
+        $boxesChecked.each(function (index, element) {
+          let $selected = $(element).parent().text();
+          let $dayAndTime = $selected.match(dayTimeRegex);
+          array.push($(this));
+        });
+
+        $boxesUnchecked.each(function (index, element) {
+          let $unselected = $(element).parent().text();
+          let $otherDayAndTime = $unselected.match(dayTimeRegex);
+        });
+      }
+
+      $(array).each(function (index, element) {
+        console.log($(element));
+      });
+
+      // if ($boxesUnchecked) {
+      //   $boxesUnchecked.each(function (index, element) {
+      //     $unselected = $(element).parent().text();
+      //     $otherDayAndTime = $unselected.match(dayTimeRegex);
+      //   });
+      // }
+    });
   };
 
   toggleOtherInput();
   matchShirtOptions();
+  compareActivities();
 });
 
 /*d
