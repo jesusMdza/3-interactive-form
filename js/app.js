@@ -66,34 +66,23 @@ $(document).ready(function () {
     const $checkBoxes = $('input[type="checkbox"]');
     const dayTimeRegex = /\w* \d\w+\W\d*\w+/;
 
-    $checkBoxes.on('change', () => {
+    $checkBoxes.on('change', (event) => {
       const $boxesChecked = $('input[type="checkbox"]:checked');
       const $boxesUnchecked = $('input[type="checkbox"]').not(':checked');
-      let array = [];
+      let $selected = $(event.target).parent().text();
+      let $dayAndTime = $selected.match(dayTimeRegex);
 
-      if ($boxesChecked) {
-        $boxesChecked.each(function (index, element) {
-          let $selected = $(element).parent().text();
-          let $dayAndTime = $selected.match(dayTimeRegex);
-          array.push($(this));
-        });
+      $checkBoxes.each(function (index, element) {
+        let $allActivities = $(element).parent().text();
+        let $allDayAndTime = $allActivities.match($dayAndTime);
 
-        $boxesUnchecked.each(function (index, element) {
-          let $unselected = $(element).parent().text();
-          let $otherDayAndTime = $unselected.match(dayTimeRegex);
-        });
-      }
-
-      $(array).each(function (index, element) {
-        console.log($(element));
+        if ($(element).prop('checked') === false) {
+          if ($allDayAndTime) {
+            $(element).prop('disabled', true);
+          }
+        }
       });
 
-      // if ($boxesUnchecked) {
-      //   $boxesUnchecked.each(function (index, element) {
-      //     $unselected = $(element).parent().text();
-      //     $otherDayAndTime = $unselected.match(dayTimeRegex);
-      //   });
-      // }
     });
   };
 
