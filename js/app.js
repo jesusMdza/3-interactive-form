@@ -69,18 +69,30 @@ $(document).ready(function () {
     $checkBoxes.on('change', (event) => {
       const $boxesChecked = $('input[type="checkbox"]:checked');
       const $boxesUnchecked = $('input[type="checkbox"]').not(':checked');
-      let $selected = $(event.target).parent().text();
-      let $dayAndTime = $selected.match(dayTimeRegex);
+      let $selected = $(event.target);
+      let $selectedText = $(event.target).parent().text();
+      let $dayAndTime = $selectedText.match(dayTimeRegex);
 
       $checkBoxes.each(function (index, element) {
         let $allActivities = $(element).parent().text();
         let $allDayAndTime = $allActivities.match($dayAndTime);
 
-        if ($(element).prop('checked') === false) {
-          if ($allDayAndTime) {
-            $(element).prop('disabled', true);
+        const enableDisableMatchedActivities = () => {
+          if ($selected.prop('checked') === true && $(element).prop('checked') === false) {
+            if ($allDayAndTime) {
+              $(element).prop('disabled', true);
+              console.log($(element).parent().text());
+            }
+          } else if ($selected.prop('checked') === false && $(element).prop('checked') === false) {
+            if ($allDayAndTime) {
+              $(element).prop('disabled', false);
+              console.log($(element).parent().text());
+            }
+
           }
         }
+
+        enableDisableMatchedActivities();
       });
 
     });
