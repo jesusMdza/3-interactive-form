@@ -73,7 +73,7 @@ $(document).ready(function () {
       let $selectedText = $(event.target).parent().text();
       let $dayAndTime = $selectedText.match(dayTimeRegex);
 
-      $checkBoxes.each(function (index, element) {
+      $checkBoxes.each((index, element) => {
         let $allActivities = $(element).parent().text();
         let $allDayAndTime = $allActivities.match($dayAndTime);
 
@@ -90,7 +90,7 @@ $(document).ready(function () {
             }
 
           }
-        }
+        };
 
         enableDisableMatchedActivities();
       });
