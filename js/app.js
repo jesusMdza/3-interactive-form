@@ -81,12 +81,10 @@ $(document).ready(function () {
           if ($selected.prop('checked') === true && $(element).prop('checked') === false) {
             if ($allDayAndTime) {
               $(element).prop('disabled', true);
-              console.log($(element).parent().text());
             }
           } else if ($selected.prop('checked') === false && $(element).prop('checked') === false) {
             if ($allDayAndTime) {
               $(element).prop('disabled', false);
-              console.log($(element).parent().text());
             }
 
           }
