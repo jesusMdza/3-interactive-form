@@ -8,6 +8,7 @@ This project is attempting to receive an "Exceeds Expectations" grade.
 $(document).ready(function () {
 
   const $nameInput = $('#name').focus();
+  const $ACTIVITIES_FIELDSET = $('.activities');
 
   const toggleOtherInput = () => {
     const $jobRoleSelect = $('#title');
@@ -65,34 +66,50 @@ $(document).ready(function () {
   const compareActivities = () => {
     const $checkBoxes = $('input[type="checkbox"]');
     const dayTimeRegex = /\w* \d\w+\W\d*\w+/;
+    const priceRegex = /[0-9]{3}/;
+    let price = '<p>Total: </p>';
+    let total = 0;
+    $ACTIVITIES_FIELDSET.append(`<p>Total: $${total}.00</p>`);
 
     $checkBoxes.on('change', (event) => {
-      const $boxesChecked = $('input[type="checkbox"]:checked');
-      const $boxesUnchecked = $('input[type="checkbox"]').not(':checked');
-      let $selected = $(event.target);
-      let $selectedText = $(event.target).parent().text();
-      let $dayAndTime = $selectedText.match(dayTimeRegex);
+      const $selected = $(event.target);
+      const $selectedText = $(event.target).parent().text();
+      const $dayAndTime = $selectedText.match(dayTimeRegex);
+      const $price = $selectedText.match(priceRegex);
 
-      $checkBoxes.each((index, element) => {
-        let $allActivities = $(element).parent().text();
-        let $allDayAndTime = $allActivities.match($dayAndTime);
+      const enableDisableMatchedActivities = () => {
+        $checkBoxes.each((index, element) => {
+          const $allActivities = $(element).parent().text();
+          const $allDayAndTime = $allActivities.match($dayAndTime);
 
-        const enableDisableMatchedActivities = () => {
           if ($selected.prop('checked') === true && $(element).prop('checked') === false) {
             if ($allDayAndTime) {
               $(element).prop('disabled', true);
+              $(element).parent().css('color', '#ccc');
             }
           } else if ($selected.prop('checked') === false && $(element).prop('checked') === false) {
             if ($allDayAndTime) {
               $(element).prop('disabled', false);
+              $(element).parent().css('color', '#000');
             }
-
           }
-        };
 
-        enableDisableMatchedActivities();
-      });
+        });
+      };
 
+      const getAndUpdateTotal = () => {
+
+        if ($selected.prop('checked')) {
+          total += parseInt($price);
+        } else {
+          total -= parseInt($price);
+        }
+
+        $('.activities p').text(`Total: $${total}.00`);
+      };
+
+      enableDisableMatchedActivities();
+      getAndUpdateTotal();
     });
   };
 
