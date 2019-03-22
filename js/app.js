@@ -98,7 +98,6 @@ $(document).ready(function () {
       };
 
       const getAndUpdateTotal = () => {
-
         if ($selected.prop('checked')) {
           total += parseInt($price);
         } else {
@@ -113,9 +112,44 @@ $(document).ready(function () {
     });
   };
 
+  const togglePaymentDivs = () => {
+    const $paymentDropDown = $('#payment');
+    const $creditCardDiv = $('#credit-card');
+    const $paypalDiv = $creditCardDiv.next();
+    const $bitcoinDiv = $creditCardDiv.next().next();
+
+    const showPaymentDetails = () => {
+      $paymentDropDown.on('change', (event) => {
+        if ($paymentDropDown.val() === 'credit card') {
+          $creditCardDiv.show();
+        } else {
+          $creditCardDiv.hide();
+        }
+
+        if ($paymentDropDown.val() === 'paypal') {
+          $paypalDiv.show();
+        } else {
+          $paypalDiv.hide();
+        }
+
+        if ($paymentDropDown.val() === 'bitcoin') {
+          $bitcoinDiv.show();
+        } else {
+          $bitcoinDiv.hide();
+        }
+
+      });
+
+      $paymentDropDown.val('credit card').trigger('change');
+    };
+
+    showPaymentDetails();
+  };
+
   toggleOtherInput();
   matchShirtOptions();
   compareActivities();
+  togglePaymentDivs();
 });
 
 /*d
