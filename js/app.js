@@ -1,75 +1,166 @@
-/* TechDegree Project 3 - Form Validation! */
+/************************************* 
+TechDegree Project 3 - Form Validation - TREEHOUSE STYLED FORM
 
-/*
 
-This project is attempting to receive an "Exceeds Expectations" grade.
 
- */
+. This project is attempting to receive an "Exceeds Expectations" grade.
+
+. Note to Reviewer:
+  - The "Name" field will be the only field that has 2 error messages. 
+    a. Blank input error
+    b. Incorrect name error
+
+  - All required input fields will have "real-time" validation messages.
+
+
+
+
+ *************************************/
+
+
 $(document).ready(function () {
 
-  const $nameInput = $('#name').focus();
-  const $ACTIVITIES_FIELDSET = $('.activities');
+  const $jobRoleSelect = $('#title');
+  const $otherField = $('#other-title');
+  const $designSelect = $('#design');
+  const $colorSelect = $('#color');
+  const $colorDiv = $('#colors-js-puns');
+  const $paymentSelect = $('#payment');
+  const $creditCardDiv = $('#credit-card');
+  const $paypalDiv = $creditCardDiv.next();
+  const $bitcoinDiv = $creditCardDiv.next().next();
+  const $checkBoxes = $('input[type="checkbox"]');
+  const $nameField = $('#name');
+  const $emailField = $('#mail');
+  const $activitiesFieldset = $('.activities');
+  const $submitButton = $('button');
+  const $ccField = $('#cc-num');
+  const $zipField = $('#zip');
+  const $cvvField = $('#cvv');
+  $nameField.focus();
+  $otherField.hide();
 
-  const toggleOtherInput = () => {
-    const $jobRoleSelect = $('#title');
-    const $otherInput = $('<input id="other-title" placeholder="Your Job Role">');
+  const $nameErr = $('<p>Name field can\'t be blank</p>');
+  const $nameErr2 = $('<p>Please insert a name with only letters</p>');
+  const $emailErr = $('<p>Please insert a correct email "example@source.com/gov/net/org"</p>');
+  const $activityErr = $('<p>Please select at least one activity</p>');
+  const $ccErr = $('<p>Credit card must be between 13 and 16 digits long</p>');
+  const $zipErr = $('<p>Zip code must be at least 5 digits long</p>');
+  const $cvvErr = $('<p>CVV must be exactly 3 digits long</p>');
 
+// Creates, styles, and appends error messages to their respective input fields. Error messages are hidden.
+  const createErr = () => {
+    const styleErr = () => {
+      $nameErr.css('color', 'red').css('margin', '0 0 10px 0');
+      $nameErr2.css('color', 'red').css('margin', '0 0 10px 0');
+      $emailErr.css('color', 'red').css('margin', '0 0 10px 0');
+      $activityErr.css('color', 'red').css('margin', '0 0 10px 0');
+      $ccErr.css('color', 'red').css('margin', '0 0 10px 0');
+      $zipErr.css('color', 'red').css('margin', '0 0 10px 0');
+      $cvvErr.css('color', 'red').css('margin', '0 0 10px 0');
+
+      $nameErr.hide();
+      $nameErr2.hide();
+      $emailErr.hide();
+      $activityErr.hide();
+      $ccErr.hide();
+      $zipErr.hide();
+      $cvvErr.hide();
+    }
+
+    const appendErr = () => {
+      $nameField.after($nameErr);
+      $nameField.after($nameErr2);
+      $emailField.after($emailErr);
+      $activitiesFieldset.append($activityErr);
+      $creditCardDiv.append($ccErr);
+      $creditCardDiv.append($zipErr);
+      $creditCardDiv.append($cvvErr);
+    }
+
+    styleErr();
+    appendErr();
+  }
+
+  // Displays the "other" input field when "Job Role: other" is selected. Hides if unselected.
+  const toggleOtherField = () => {
     $jobRoleSelect.on('change', function () {
       const $value = $(this).val();
 
       if ($value === 'other') {
-        $jobRoleSelect.after($otherInput);
+        $otherField.show();
+        $otherField.val('');
       } else if ($value !== 'other') {
-        $otherInput.remove();
+        $otherField.hide();
       }
     });
   };
 
   const matchShirtOptions = () => {
-    const $designSelect = $('#design');
-    const $colorSelect = $('#color');
     const jsPunsRegex = /[jJ][sS] [pP]\w{3}/;
     const jsLoveRegex = /[I] \W JS/;
     let $designOptionValue;
+    $colorDiv.hide();
 
     $designSelect.on('change', function () {
       $designOptionValue = $(this).val();
 
-      // show only "js puns" shirt colors
-      if ($designOptionValue === 'js puns') {
-        $colorSelect.children().each(function (index, element) {
-          if (jsPunsRegex.test($(element).text()) === true) {
-            $(element).show();
-          } else {
-            $(element).hide();
-          }
-        });
-
-        $('#color').find('option:not(:hidden):eq(0)');
+      // Shows the "color" div when a t-shirt theme is selected
+      const showColorsDiv = () => {
+        if ($designOptionValue === 'js puns' || $designOptionValue === 'heart js') {
+          $colorDiv.show();
+        }
       }
 
-      // show only "I <3 js" shirt colors
-      if ($designOptionValue === 'heart js') {
-        $colorSelect.children().each(function (index, element) {
-          if (jsLoveRegex.test($(element).text()) === true) {
-            $(element).show();
-          } else {
-            $(element).hide();
-          }
-        });
-
-        $('#color').find('option:not(:hidden):eq(0)');
+      /* Searches through t-shirt colors using regex and displays only "JS Puns" t-shirt colors*/
+      const displayJSPunsColors = () => {
+        if ($designOptionValue === 'js puns') {
+          $colorSelect.children().each(function (index, element) {
+            if (jsPunsRegex.test($(element).text()) === true) {
+              $(element).show();
+            } else {
+              $(element).hide();
+            }
+  
+            if (index === 0) {
+              $(element).attr('selected', true);
+            } else {
+              $(element).attr('selected', false);
+            }
+          });
+        }
       }
+
+       /* Searches through t-shirt colors using regex and displays only "I <3 JS" t-shirt colors*/
+      const displayHeartJSColors = () => {
+        if ($designOptionValue === 'heart js') {
+          $colorSelect.children().each(function (index, element) {
+            if (jsLoveRegex.test($(element).text()) === true) {
+              $(element).show();
+            } else {
+              $(element).hide();
+            }
+  
+            if (index === 3) {
+              $(element).attr('selected', true);
+            } else {
+              $(element).attr('selected', false);
+            }
+          });
+        }
+      }
+
+      showColorsDiv();
+      displayJSPunsColors();
+      displayHeartJSColors();
     });
   };
 
   const compareActivities = () => {
-    const $checkBoxes = $('input[type="checkbox"]');
     const dayTimeRegex = /\w* \d\w+\W\d*\w+/;
     const priceRegex = /[0-9]{3}/;
-    let price = '<p>Total: </p>';
     let total = 0;
-    $ACTIVITIES_FIELDSET.append(`<p>Total: $${total}.00</p>`);
+    $activitiesFieldset.append(`<p class="total">Total: $${total}.00</p>`);
 
     $checkBoxes.on('change', (event) => {
       const $selected = $(event.target);
@@ -77,6 +168,7 @@ $(document).ready(function () {
       const $dayAndTime = $selectedText.match(dayTimeRegex);
       const $price = $selectedText.match(priceRegex);
 
+      /* Disables activities with the same day and time of user's selected activities*/
       const enableDisableMatchedActivities = () => {
         $checkBoxes.each((index, element) => {
           const $allActivities = $(element).parent().text();
@@ -97,6 +189,7 @@ $(document).ready(function () {
         });
       };
 
+      /* Gets and updates total cost of selected activities */
       const getAndUpdateTotal = () => {
         if ($selected.prop('checked')) {
           total += parseInt($price);
@@ -104,7 +197,7 @@ $(document).ready(function () {
           total -= parseInt($price);
         }
 
-        $('.activities p').text(`Total: $${total}.00`);
+        $('.activities p.total').text(`Total: $${total}.00`);
       };
 
       enableDisableMatchedActivities();
@@ -112,158 +205,187 @@ $(document).ready(function () {
     });
   };
 
+  /* Shows and hides payment divs according to the selected payment option */
   const togglePaymentDivs = () => {
-    const $paymentDropDown = $('#payment');
-    const $creditCardDiv = $('#credit-card');
-    const $paypalDiv = $creditCardDiv.next();
-    const $bitcoinDiv = $creditCardDiv.next().next();
-
     const showPaymentDetails = () => {
-      $paymentDropDown.on('change', (event) => {
-        if ($paymentDropDown.val() === 'credit card') {
+      $paymentSelect.on('change', (event) => {
+        if ($paymentSelect.val() === 'credit card') {
           $creditCardDiv.show();
         } else {
           $creditCardDiv.hide();
         }
 
-        if ($paymentDropDown.val() === 'paypal') {
+        if ($paymentSelect.val() === 'paypal') {
           $paypalDiv.show();
         } else {
           $paypalDiv.hide();
         }
 
-        if ($paymentDropDown.val() === 'bitcoin') {
+        if ($paymentSelect.val() === 'bitcoin') {
           $bitcoinDiv.show();
         } else {
           $bitcoinDiv.hide();
         }
-
       });
 
-      $paymentDropDown.val('credit card').trigger('change');
+      // disables "select method" option
+      $paymentSelect.val('credit card').trigger('change');
+      $('#payment option[value="select_method"]').prop('disabled', true);
     };
 
     showPaymentDetails();
   };
 
-  toggleOtherInput();
+  const validateForm = () => {
+    createErr();
+    const nameRegex = /^([a-z]|[A-Z])*\s?([a-z]|[A-Z])*$/;
+    const emailRegex = /\b[\w\d]+[@]\w+\.(com|net|gov|org)\b/;
+    const ccRegex = /\b\d{13,16}\b/;
+    const zipRegex = /\d{5,}/;
+    const cvvRegex = /\b\d{3}\b/;
+
+    let $inputName;
+    let $inputEmail;
+    let validName;
+    let validEmail;
+
+    let $ccInput;
+    let $zipInput;
+    let $cvvInput;
+    let validCC;
+    let validZip;
+    let validCVV;
+
+    /* checks for incorrect inputs on name and email fields */
+    /* name field can display 2 error messages */
+    const validateNameEmail = () => {
+      $nameField.on('input', (event) => {
+        $inputName = $(event.target).val();
+        validName = nameRegex.test($inputName);
+
+        if (!$inputName || $inputName === ' ') {
+          $nameErr.show();
+        } else {
+          $nameErr.hide();
+        }
+
+        if (!validName) {
+          $nameErr2.show();
+        } else {
+          $nameErr2.hide();
+        }
+      });
+  
+      $emailField.on('input', (event) => {
+        $inputEmail = $(event.target).val();
+        validEmail = emailRegex.test($inputEmail);
+
+        if (!$inputEmail || !validEmail) {
+          $emailErr.show();
+        } else {
+          $emailErr.hide();
+        }
+      });
+
+      $submitButton.on('click', (event) => {
+        if (!$inputName || !validName) {
+          event.preventDefault();
+          $nameErr.show();
+        } 
+        
+        if (!$inputEmail || !validEmail) {
+          event.preventDefault();
+          $emailErr.show();
+        } 
+      });
+    }
+
+    /* Checks length of selected activities and displays error if none are selected */
+    const checkForActivitySelection = () => {
+      let check = $('input[type="checkbox"]:checked');
+
+      $checkBoxes.on('click', function (event) {
+        check = $('input[type="checkbox"]:checked');
+        if (check.length === 0) {
+          $activityErr.show();
+        } else {
+          $activityErr.hide();
+        }
+      });
+
+      $submitButton.on('click', (event) => {
+        if (check.length === 0) {
+          event.preventDefault();
+          $activityErr.show();
+        } else {
+          $activityErr.hide();
+        }
+      });
+    }
+
+    /* Uses regex's to search for correctly inputted payment info */
+    const validateCCInfo = () => {
+      $ccField.on('input', (event) => {
+        $ccInput = $(event.target).val();
+        validCC = ccRegex.test($ccInput);
+        
+        if (!$ccInput || !validCC) {
+          $ccErr.show();
+        } else {
+          $ccErr.hide();
+        }
+      });
+  
+      $zipField.on('input', (event) => {
+        $zipInput = $(event.target).val();
+        validZip = zipRegex.test($zipInput);
+
+        if (!$zipInput || !validZip) {
+          $zipErr.show();
+        } else {
+          $zipErr.hide();
+        }
+      });
+
+      $cvvField.on('input', (event) => {
+        $cvvInput = $(event.target).val();
+        validCVV = cvvRegex.test($cvvInput);
+
+        if (!$cvvInput || !validCVV) {
+          $cvvErr.show();
+        } else {
+          $cvvErr.hide();
+        }
+      });
+
+      $submitButton.on('click', (event) => {
+        if ($paymentSelect.val() === 'credit card') {
+          if (!$ccInput || !validCC) {
+            event.preventDefault();
+            $ccErr.show();
+          }
+  
+          if (!$zipInput || !validZip) {
+            event.preventDefault();
+            $zipErr.show();
+          }
+  
+          if (!$cvvInput || !validCVV) {
+            event.preventDefault();
+            $cvvErr.show();
+          }
+        }
+      });
+    }
+  
+    validateNameEmail();
+    checkForActivitySelection();
+    validateCCInfo();
+  }
+
+  toggleOtherField();
   matchShirtOptions();
   compareActivities();
   togglePaymentDivs();
+  validateForm();
 });
-
-/*d
-1. Set focus on the first text field
-a. When the page first loads, the first text field should be in focus by default.
-
-2. ”Job Role” section
-  a. Include a text field that will be revealed when the "Other" option is selected from the "Job Role" drop down menu.
-  b. Give the field an id of “other-title,” and add the placeholder text of "Your Job Role".
-
-Note: You'll need to add the "Other" job role input directly into the HTML and hide it initially with JS in order to get this feature to work
-when JS is disabled, which is a requirement below.
-
-
-3. ”T-Shirt Info” section
-  a. For the T-Shirt "Color" menu, only display the color options that match the design selected in the "Design" menu.
-  b. If the user selects "Theme - JS Puns" then the color menu should only display "Cornflower Blue," "Dark Slate Grey," and "Gold."
-  c. If the user selects "Theme - I ♥ JS" then the color menu should only display "Tomato," "Steel Blue," and "Dim Grey."
-  d. When a new theme is selected from the "Design" menu, the "Color" field and drop down menu is updated.
-
-
-4. ”Register for Activities” section
-  a. Some events are at the same day and time as others. If the user selects a workshop, don't allow selection of a workshop at the
-     same day and time -- you should disable the checkbox and visually indicate that the workshop in the competing time slot isn't available.
-  b. When a user unchecks an activity, make sure that competing activities (if there are any) are no longer disabled.
-  c. As a user selects activities, a running total should display below the list of checkboxes. For example, if the user selects "Main Conference",
-     then Total: $200 should appear. If they add 1 workshop, the total should change to Total: $300.
-
-
-5. "Payment Info" section
-  a. Display payment sections based on the payment option chosen in the select menu.
-  b. The "Credit Card" payment option should be selected by default. Display the #credit-card div, and hide the "PayPal" and "Bitcoin" information.
-     Payment option in the select menu should match the payment option displayed on the page.
-  c. When a user selects the "PayPal" payment option, the PayPal information should display, and the credit card and “Bitcoin” information should
-     be hidden.
-  d. When a user selects the "Bitcoin" payment option, the Bitcoin information should display, and the credit card and “PayPal” information should
-     be hidden.
-
-NOTE: The user should not be able to select the "Select Payment Method" option from the payment select menu,
-because the user should not be able to submit the form without a chosen payment option.
-
-
-6. Form validation
-  If any of the following validation errors exist, prevent the user from submitting the form:
-    a. Name field can't be blank.
-    b. Email field must be a validly formatted e-mail address (you don't have to check that it's a real e-mail address, just that
-       it's formatted like one: dave@teamtreehouse.com for example.
-    c. User must select at least one checkbox under the "Register for Activities" section of the form.
-    d. If the selected payment option is "Credit Card," make sure the user has supplied a Credit Card number, a Zip Code, and a 3 number CVV value
-       before the form can be submitted.
-          - Credit Card field should only accept a number between 13 and 16 digits.
-          - The Zip Code field should accept a 5-digit number.
-          - The CVV should only accept a number that is exactly 3 digits long.
-
-NOTE: Don't rely on the built in HTML5 validation by adding the required attribute to your DOM elements.
-You need to actually create your own custom validation checks and error messages.
-
-NOTE: Avoid using snippets or plugins for this project. To get the most out of the experience, you should be writing all of your own code
-for your own custom validation.
-
-NOTE: Make sure your validation is only validating Credit Card info if Credit Card is the selected payment method.
-
-
-7. Form validation messages
-  Provide some kind of indication when there’s a validation error. The field’s borders could turn red, for example, or even better
-  for the user would be if a red text message appeared near the field.
-
-  The following fields should have some obvious form of an error indication:
-    a. Name field
-    b. Email field
-    c. Register for Activities checkboxes (at least one must be selected)
-    d. Credit Card number (Only if Credit Card payment method is selected)
-    e. Zip Code (Only if Credit Card payment method is selected)
-    f. CVV (Only if Credit Card payment method is selected)
-
-Note: Error messages or indications should not be visible by default. They should only show upon submission, or after some user interaction.
-
-
-8. Form works without JavaScript - Progressive Enhancement
-  The user should still have access to all form fields and payment information if JS isn't working for whatever reason.
-  For example, when the JS is removed from the project:
-    a. The “Other” text field under the "Job Role" section should be visible
-    b. All information for Bitcoin, PayPal or Credit Card payments should be visible.
-
-
-
-
-/*   /////     EXTRA Credit      ///////
-
-
-1. T Shirt Section
-  a. Hide the "Color" label and select menu until a T-Shirt design is selected from the "Design" menu.
-
-2. Conditional Error Message
-  a. Program at least one of your error messages so that more information is provided depending on the error.
-    For example, if the user hasn’t entered a credit card number and the field is completely blank, the error message reads
-    “Please enter a credit card number.” If the field isn’t empty but contains only 10 numbers, the error message reads “Please enter a
-    number that is between 13 and 16 digits long.”
-
-3. Real-time Error Messages
-  a. Program your form so that it provides a real-time validation error message for at least one text input field. Rather than
-  providing an error message on submit, your form should check for errors and display messages as the user begins typing inside a text field.
-  For example, if the user enters an invalid email address, the error appears as the user begins to type, and disappears as soon as
-  the user has entered a complete and correctly formatted email address. You must accomplish this will your own JavaScript code.
-  Do not rely on HTML5's built-in email validation.
-
-NOTE: If you implement the above exceeds requirements in your form, make sure you detail in your submission notes which
-input will have different error messages depending on the error, and which input will have "real time" validation messages, so your reviewer
-won't miss them by accident.
-
-
-NOTE: Getting exceeds
-
-To get an "Exceeds Expectations" grade for this project, you'll need to complete each of the items in this section. See the rubric in the "How You'll Be Graded" tab above for details on how you'll be graded.
-If you’re shooting for the "Exceeds Expectations" grade, it is recommended that you mention so in your submission notes.
-Passing grades are final. If you try for the "Exceeds Expectations" grade, but miss an item and receive a "Meets Expectations" grade, you won’t get a second chance. Exceptions can be made for items that have been misgraded in review.
- */
